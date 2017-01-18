@@ -57,13 +57,14 @@ function login($username, $password, $db){
 		if($count == 1){
 			$_SESSION['login_user']= $row['userName'];
 			header("Location: index.php");
+		} else {
+			header("Location: login.php?wtf=1");
 		}
 	}
 }
 function logout(){
 	if(isset($_SESSION['login_user'])){
 unset($_SESSION['login_user']);
-
 header('Location: index.php?logout');
 }
 }
@@ -72,20 +73,14 @@ function mkAnnouncement($title, $content, $curUser, $date, $db){
 	$title     =  mysqli_real_escape_string($db, htmlspecialchars($_POST['title']));
 	$content   =  mysqli_real_escape_string($db, htmlspecialchars($_POST['text']));
 
-
-//echo $curUser;
-
 	$sql = "INSERT INTO announcement (annTitle, annContent, annUser, annDate, is_visable)
 	VALUES ('$title', '$content', '$curUser', '$date', 1)";
 
 	if ($db->query($sql) === TRUE) {
-	    echo "New record created successfully";
+	    return 1; 
 	} else {
-	    echo "Error: " . $sql . "<br>" . $db->error;
+	    return 0;
 	}
-
-
-
 }
 
 function register($username, $password, $confPassword, $db){
@@ -130,6 +125,7 @@ $result = mysqli_query($db,$sql);
 			echo "Posted by: " . ucfirst($row['annUser']);
 			echo "<br /><br />";
 			echo $row['annDate'];
+			
 			echo "<br /><hr ><br />";
 		}
 
